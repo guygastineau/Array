@@ -10,12 +10,9 @@
 
 // Set the minimum capacity for arrays.
 #define ARRAY_MIN_CAP 16
-// During operations that add to the arrays, if the
-// count/capacity hits the ARRAY_GROW_RATIO, then the array capacity
-// should be doubled (using `realloc').  When deleting elements, should
-// the count/capcity ratio fall to ARRAY_SHRINK_RATIO we need to shrink
+// When deleting elements, should the count/capcity ratio
+// fall to ARRAY_SHRINK_RATIO we need to shrink
 // the Array->cap by half (also using `realloc').
-#define ARRAY_GROW_RATIO 0.75
 #define ARRAY_SHRINK_RATIO 0.25
 
 // A nice way to abstract our data.
@@ -75,6 +72,8 @@ Array *mkArray();
 Array *mkArrayWithCap(size_t initial_cap);
 // Create new array with contents from existing c array (pointer and length)
 Array *arrayFromCArray(size_t len, data_t *buff);
+// Get subslice of array. Notice, the Slice is a struct not a pointer.
+Slice arrayGetSlice(Array *from, size_t start, size_t end);
 
 // Mutation
 

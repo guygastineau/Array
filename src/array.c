@@ -15,6 +15,8 @@ Array *mkArrayWithCap(size_t initial_cap);
 
 Array *arrayFromCArray(size_t len, data_t *buff);
 
+Slice arrayGetSlice(Array *from, size_t start, size_t end);
+
 
 // Mutation
 
