@@ -8,29 +8,15 @@
 // be included in the array.c file itself afte inclusion of this header.
 #include <stddef.h>
 
-// Set the minimum capacity for arrays, but let library users
-// override the value. You should use this macro value when
-// allocating and resizing Array types. It is senseless for
-// arrays to have little or no capacity. 16 is good value, so
-// you don't need to change it, just use it ;)
-#ifndef ARRAY_MIN_CAP
+// Set the minimum capacity for arrays.
 #define ARRAY_MIN_CAP 16
-#endif
-
-// These ratios are also user definable (before including this header)
-// Essentially, during operations that add to the arrays, if the
+// During operations that add to the arrays, if the
 // count/capacity hits the ARRAY_GROW_RATIO, then the array capacity
 // should be doubled (using `realloc').  When deleting elements, should
 // the count/capcity ratio fall to ARRAY_SHRINK_RATIO we need to shrink
 // the Array->cap by half (also using `realloc').
-
-#ifndef ARRAY_GROW_RATIO
 #define ARRAY_GROW_RATIO 0.75
-#endif
-
-#ifndef ARRAY_SHRINK_RATIO
 #define ARRAY_SHRINK_RATIO 0.25
-#endif
 
 // A nice way to abstract our data.
 // Still this is specialized and not polymorphic.
