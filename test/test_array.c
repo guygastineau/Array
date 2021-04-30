@@ -54,6 +54,8 @@ int main(void)
    UnityBegin("test/test_array.c");
 
    RUN_TEST(test_allocate_empty_array);
+   RUN_TEST(test_allocate_array_with_capacity_too_small);
+   RUN_TEST(test_allocate_array_with_capacity_larger);
 
    return UnityEnd();
 }
