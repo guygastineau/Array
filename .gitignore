@@ -1,0 +1,14 @@
+/bin/
+/test/vendor/
+
+# The project binary
+array
+
+*.o
+*.a
+*.out
+
+# For Emacs
+*~
+\#*\#
+.\#*
