@@ -73,6 +73,7 @@ Array *mkArrayWithCap(size_t initial_cap);
 // Create new array with contents from existing c array (pointer and length)
 Array *arrayFromCArray(size_t len, data_t *buff);
 // Get subslice of array. Notice, the Slice is a struct not a pointer.
+// If `end' is beyond the length of `from' just truncate the slice.
 Slice arrayGetSlice(Array *from, size_t start, size_t end);
 
 // Mutation
