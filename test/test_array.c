@@ -48,6 +48,20 @@ static void assert_clean_allocation(Array *arr, size_t capacity, size_t count)
                                "mkArray failed to allocate internal buffer");
 }
 
+static void appendCArray(data_t *dest,
+                         size_t l1, data_t *d1,
+                         size_t l2, data_t *d2)
+{
+  size_t idx, offset = 0;
+  for (; idx < l1; ++idx) {
+    dest[idx] = d1[idx];
+  }
+  offset = idx;
+  for (idx = 0; idx < l2; ++ idx) {
+    dest[idx + offset] = d2[idx];
+  }
+}
+
 static void test_allocate_empty_array(void)
 {
   Array *arr = mkArray();
@@ -152,6 +166,66 @@ static void test_get_slice_truncate_invalid_end(void)
   arrayDestroy(arr);
 }
 
+static void test_array_append_slice_to_null_is_error(void)
+{
+  TEST_IGNORE();
+  data_t data[8] = { 1, 2, 3, 4, 5, 6, 7, 8 };
+  TEST_ASSERT_EQUAL_INT(-1, arrayAppendS(NULL, (Slice){ 8, data }));
+}
+
+static void test_array_append_slice_invalid_slice_is_error(void)
+{
+  TEST_IGNORE();
+  data_t data[8] = { 1, 2, 3, 4, 5, 6, 7, 8 };
+  Slice badSlice = { 4, NULL };
+  Array *to = arrayFromCArray(8, data);
+  TEST_ASSERT_EQUAL_INT(-1, arrayAppendS(to, badSlice));
+  arrayDestroy(to);
+}
+
+static void test_array_append_slice(void)
+{
+  TEST_IGNORE();
+  data_t d1[8] = { 1, 2, 3, 4, 5, 6, 7, 8 };
+  data_t d2[12] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+  data_t expected[20];
+  appendCArray(expected, 8, d1, 12, d2);
+  Array *to = arrayFromCArray(8, d1);
+  TEST_ASSERT_EQUAL_INT(20, arrayAppendS(to, (Slice){ 12, d2 }));
+  TEST_ASSERT_EQUAL_ARRAY((Slice){ 20, expected }, to);
+  arrayDestroy(to);
+}
+
+static void test_array_prepend_slice_to_null_is_error(void)
+{
+  TEST_IGNORE();
+  data_t data[8] = { 1, 2, 3, 4, 5, 6, 7, 8 };
+  TEST_ASSERT_EQUAL_INT(-1, arrayPrependS(NULL, (Slice){ 8, data }));
+}
+
+static void test_array_prepend_slice_invalid_slice_is_error(void)
+{
+  TEST_IGNORE();
+  data_t data[8] = { 1, 2, 3, 4, 5, 6, 7, 8 };
+  Slice badSlice = { 4, NULL };
+  Array *to = arrayFromCArray(8, data);
+  TEST_ASSERT_EQUAL_INT(-1, arrayPrependS(to, badSlice));
+  arrayDestroy(to);
+}
+
+static void test_array_prepend_slice(void)
+{
+  TEST_IGNORE();
+  data_t d1[8] = { 1, 2, 3, 4, 5, 6, 7, 8 };
+  data_t d2[12] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+  data_t expected[20];
+  appendCArray(expected, 12, d2, 8, d1);
+  Array *to = arrayFromCArray(8, d1);
+  TEST_ASSERT_EQUAL_INT(20, arrayPrependS(to, (Slice){ 12, d2 }));
+  TEST_ASSERT_EQUAL_ARRAY((Slice){ 20, expected }, to);
+  arrayDestroy(to);
+}
+
 int main(void)
 {
    UnityBegin("test/test_array.c");
@@ -167,6 +241,12 @@ int main(void)
    RUN_TEST(test_get_slice_singleton);
    RUN_TEST(test_get_slice_whole_array);
    RUN_TEST(test_get_slice_truncate_invalid_end);
+   RUN_TEST(test_array_append_slice_to_null_is_error);
+   RUN_TEST(test_array_append_slice_invalid_slice_is_error);
+   RUN_TEST(test_array_append_slice);
+   RUN_TEST(test_array_prepend_slice_to_null_is_error);
+   RUN_TEST(test_array_prepend_slice_invalid_slice_is_error);
+   RUN_TEST(test_array_prepend_slice);
 
    return UnityEnd();
 }
